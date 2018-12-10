@@ -1,5 +1,5 @@
 {
-    "name": "magentron/metaphone-spanish-php",
+    "name": "magentron/metaphone-spanish",
     "description": "PHP implementation of the Spanish metaphone algorithm",
     "type": "library",
 	"keywords": ["PHP","metaphone","spanish"],
