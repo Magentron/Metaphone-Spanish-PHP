@@ -1,3 +1,24 @@
+
+# PHP implementation of the Spanish metaphone algorithm
+
+## Requirements
+
+Perhaps it works with lesser versions as well, but this is untested.
+
+- PHP 5.3 or above
+
+## Installation
+
+Add package via composer:
+
+    composer require magentron/metaphone-spanish
+
+Use:
+
+	use Magentron\MetaphoneSpanish\PhoneticAlgorithmsES;
+
+## LICENSE
+
   The Spanish Metaphone Algorithm (Algoritmo del Metáfono para el Español)
   
   If you use it in academic papers you can cite this article:

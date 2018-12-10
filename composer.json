@@ -1,0 +1,24 @@
+{
+    "name": "magentron/metaphone-spanish-php",
+    "description": "PHP implementation of the Spanish metaphone algorithm",
+    "type": "library",
+	"keywords": ["PHP","metaphone","spanish"],
+	"homepage": "https://github.com/Magentron/Metaphone-Spanish-PHP",
+	"time": "2018-12-10 12:31:26",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Jeroen Derks",
+            "email": "jeroen@derks.it",
+			"homepage": "https://www.derks.it/",
+			"role": "Developer"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {},
+	"autoload": {
+		"psr-4": {
+			"Magentron\\MetaphoneSpanish\\": ""
+		}
+	}
+}
