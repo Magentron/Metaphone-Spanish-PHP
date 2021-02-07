@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+if (is_file(__DIR__.'/metaphone_es_cli.php')) {
+    require_once __DIR__.'/src/cli/metaphone_es_cli.php';
+} else {
+    require_once __DIR__ . '/../src/cli/metaphone_es_cli.php';
+}

@@ -16,6 +16,15 @@ Add package via composer:
 Use:
 
 	use Magentron\MetaphoneSpanish\PhoneticAlgorithmsES;
+	
+	$paes = new PhoneticAlgorithmsES();
+	$key  = $paes->metaphone($phrase);
+
+
+## Command line
+
+    vendor/bin/metaphone-es [ <-|word|file> ] ...
+   
 
 ## LICENSE
 

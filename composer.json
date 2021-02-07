@@ -15,10 +15,38 @@
         }
     ],
     "minimum-stability": "beta",
-    "require": {},
-	"autoload": {
+    "autoload": {
 		"psr-4": {
-			"Magentron\\MetaphoneSpanish\\": ""
+			"Magentron\\MetaphoneSpanish\\": "src/",
+			"Magentron\\MetaphoneSpanish\\Tests\\": "tests/"
 		}
-	}
+	},
+	"bin": [
+		"bin/metaphone-es"
+	],
+    "repositories": [
+        {
+          "type": "package",
+          "package": {
+            "name": "amsqr/spanish-metaphone",
+            "version": "dev-master",
+            "source": {
+              "url": "https://github.com/amsqr/Spanish-Metaphone",
+              "type": "git",
+              "reference": "origin/master"
+            }
+          }
+        }
+    ],
+    "require-dev": {
+        "amsqr/spanish-metaphone": "dev-master",
+        "phpstan/phpstan": "0.12.x-dev",
+        "friendsofphp/php-cs-fixer": "9999999-dev",
+        "phpmd/phpmd": "9999999-dev",
+        "squizlabs/php_codesniffer": "4.0.x-dev",
+        "sebastian/phpcpd": "6.0.x-dev",
+        "phploc/phploc": "7.0.x-dev",
+        "phpunit/phpunit": "^9.5",
+        "theseer/phpdox": "dev-master"
+    }
 }
