@@ -15,10 +15,10 @@ Add package via composer:
 
 Use:
 
-	use Magentron\MetaphoneSpanish\PhoneticAlgorithmsES;
+	use Magentron\MetaphoneSpanish\MetaphoneSpanish;
 	
-	$paes = new PhoneticAlgorithmsES();
-	$key  = $paes->metaphone($phrase);
+	$mes = new MetaphoneSpanish();
+	$key = $mes->metaphone($phrase);
 
 
 ## Command line
