@@ -4,7 +4,6 @@
     "type": "library",
 	"keywords": ["PHP","metaphone","spanish"],
 	"homepage": "https://github.com/Magentron/Metaphone-Spanish-PHP",
-	"time": "2018-12-10 12:31:26",
     "license": "GPL-3.0-or-later",
     "authors": [
         {
@@ -39,6 +38,7 @@
         }
     ],
     "require-dev": {
+		"php": "^7.3",
         "amsqr/spanish-metaphone": "dev-master",
         "phpstan/phpstan": "0.12.x-dev",
         "friendsofphp/php-cs-fixer": "9999999-dev",
@@ -47,6 +47,7 @@
         "sebastian/phpcpd": "6.0.x-dev",
         "phploc/phploc": "7.0.x-dev",
         "phpunit/phpunit": "^9.5",
-        "theseer/phpdox": "dev-master"
+        "theseer/phpdox": "dev-master",
+        "clean/phpdoc-md": "^0.19.1"
     }
 }

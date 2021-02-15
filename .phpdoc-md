@@ -1,0 +1,9 @@
+<?php
+return (object)[
+    'rootNamespace' => 'Magentron\\MetaphoneSpanish', 
+    'destDirectory' => 'build/phpdoc-md',
+    'format' => 'github',
+    'classes' => [
+        '\\Magentron\\MetaphoneSpanish\\MetaphoneSpanish',
+    ],
+];

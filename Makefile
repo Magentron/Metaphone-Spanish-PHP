@@ -26,14 +26,16 @@
 #	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 #	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+IODIRNAME=Metaphone-Spanish-PHP
 OS:=$(shell uname -s)
 NPROCS:=$(shell [ Darwin = $(OS) ] && sysctl -n hw.ncpu || nproc)
 PHP_SRC=src
 PHP_SRC_TEST=src tests
+PHPDOCUMENTOR=phpdocumentor3
 PHPUNIT=$(PHP) vendor/bin/phpunit -d xdebug.max_nesting_level=250 -d memory_limit=1024M  --testdox-xml=build/logs/phpunit.xml $(PHPUNIT_EXTRA)
 TMP=.tmp
 
-all:	composer test static-analysis phpdox
+all:	composer test static-analysis phpdox phpdoc-md
 
 $(TMP):
 	mkdir -p $(TMP)
@@ -73,16 +75,48 @@ test-profiler testprofiler:
 		make testfastfunc PHP="$(PHP) -d xdebug.profiler_enable=1 -d xdebug.profiler_output_name=cachegrind.out.%p -d xdebug.profiler_output_dir=$$cwd/storage/tmp/xdebug" EXTRA='$(EXTRA)' FUNC='$(FUNC)'; \
 	 fi
 
+test-stop teststop:
+	make test EXTRA="--stop-on-failure $(EXTRA)"
+
+#
+#	Lint
+#
+lint lint-parallel:	
+	@make -j4 phplint xmllint
+
+lint-sequential:	phplint xmllint 
+
+bladelint blade-lint lint-blade lintblade:
+	@: echo lint - Blade...
+	@: nice -20 $(ARTISAN) blade:lint --quiet
+
+jsonlint json-lint lint-json lintjson:
+	@echo lint - JSON...
+	@find $(SRC) -name '*.json' | nice -20 parallel 'echo {}:; jsonlint -q {}' > .tmp.jsonlint 2>&1;\
+		egrep -B1 '^(Error:|\s|\.\.\. )' .tmp.jsonlint | egrep -v ^--; res=$$?; rm -f .tmp.jsonlint; [ 0 != "$$res" ]
+
+phplint php-lint lint-php lintphp:
+	@echo lint - PHP...
+	@find $(PHP_SRC_TEST) -name '*.php' | nice -20 parallel 'php -l {}' | fgrep -v 'No syntax errors detected' > .tmp.phplint;\
+		[ ! -s .tmp.phplint ]; res=$$?; cat .tmp.phplint; rm -f .tmp.phplint; exit $$res
+
+xmllint xml-lint lint-xml lintxml:
+	@echo lint - XML...
+	@find $(SRC) -name '*.xml' | while read file; do nice -20 xmllint --noout "$$file"; done
+
 #
 #	Static code analysis
 #
-static-analysis static-analyzis static analysis analyzis analyse analyze stat anal:	phplint phpcpd phpcs phploc phpmd phpstan
+loc:
+	@cloc --follow-links $(PHP_SRC_TEST)
 
-phpcpd:
-	vendor/bin/phpcpd $(EXTRA) $(PHP_SRC_TEST) 
+static-analysis static-analyzis static analysis analyzis analyse analyze stat anal:	phplint phpcpd phpcs phploc phpmd phpstan
 
 phpcbf:
 	vendor/bin/phpcbf --standard=PSR2 -p --parallel=$(NPROCS) -s $(EXTRA) $(PHP_SRC_TEST) 
+
+phpcpd:
+	vendor/bin/phpcpd $(EXTRA) $(PHP_SRC_TEST) 
 
 phpcs:	build/logs
 	vendor/bin/phpcs --standard=PSR2 -p --parallel=$(NPROCS) --report-xml=build/logs/phpcs.xml -s $(EXTRA) $(PHP_SRC_TEST) 
@@ -90,7 +124,7 @@ phpcs:	build/logs
 phploc:	build/logs
 	vendor/bin/phploc --log-xml=build/logs/phploc.xml $(EXTRA) $(PHP_SRC_TEST)
 
-phpmd:	build/logs
+phpmd:
 	-vendor/bin/phpmd $(PHP_SRC) ansi cleancode,codesize,controversial,design,naming,unusedcode $(EXTRA)
 
 phpmd-xml phpmdx:	build/logs
@@ -99,13 +133,15 @@ phpmd-xml phpmdx:	build/logs
 phpstan:
 	vendor/bin/phpstan analyse $(EXTRA) $(PHP_SRC_TEST)
 
-phplint php-lint lint-php lintphp lint:
-	@echo lint - PHP...
-	@find $(PHP_SRC_TEST) -name '*.php' | nice -20 parallel 'php -l {}' | fgrep -v 'No syntax errors detected' > .tmp.phplint;\
-		[ ! -s .tmp.phplint ]; res=$$?; cat .tmp.phplint; rm -f .tmp.phplint; exit $$res
+phpdoc-md:
+	vendor/bin/phpdoc-md
 
 phpdox:	phpmdx
 	vendor/bin/phpdox
 
 build build/logs:
 	mkdir -p $@
+
+deploy:	static-analysis test phpdox phpdoc-md
+	cp -va build/phpdoc-md/* ../magentron.github.io/$(IODIRNAME)/
+	ln -nsf README.md ../magentron.github.io/$(IODIRNAME)/index.md
